@@ -1,0 +1,30 @@
+image: ubuntu
+
+before_script:
+    - apt update
+    - apt install python3 python3-pip -y
+    - pip3 install pylint
+    - pip3 install pytest
+
+stages:
+    - lint
+    - test
+
+lint:
+    stage: lint
+    only:
+        - merge_requests
+    tags:
+        - ubuntu
+    script:
+        - pylint $(find . -name "*.py" | xargs)
+
+test:
+    stage: test
+    only:
+        - merge_requests
+    tags:
+        - ubuntu
+    script:
+        - pytest -v $(find . -name "*_test.py" | xargs)
+
